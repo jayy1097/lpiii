@@ -1,0 +1,1055 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Untitled3}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{l+m+mi}{2}
+\PY{n}{rate} \PY{o}{=} \PY{l+m+mf}{0.01}
+\PY{n}{precision} \PY{o}{=} \PY{l+m+mf}{0.000001}
+\PY{n}{step} \PY{o}{=} \PY{l+m+mi}{1}
+\PY{n}{iteration} \PY{o}{=} \PY{l+m+mi}{1000}
+\PY{n+nb}{iter} \PY{o}{=} \PY{l+m+mi}{1}
+\PY{n}{gdf} \PY{o}{=} \PY{k}{lambda} \PY{n}{x}\PY{p}{:}\PY{p}{(}\PY{n}{x}\PY{o}{+}\PY{l+m+mi}{3}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
+\PY{n}{arr} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{slope}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{l+m+mi}{2}\PY{o}{*}\PY{p}{(}\PY{n}{x}\PY{o}{+}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{k}{def} \PY{n+nf}{eq}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{p}{(}\PY{n}{x}\PY{o}{+}\PY{l+m+mi}{3}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{while} \PY{n}{iteration} \PY{o}{\PYZgt{}} \PY{n+nb}{iter} \PY{o+ow}{and} \PY{n}{step} \PY{o}{\PYZgt{}} \PY{n}{precision}\PY{p}{:}
+    \PY{n}{prev} \PY{o}{=} \PY{n}{x}
+    \PY{n}{x} \PY{o}{=} \PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{rate}\PY{o}{*}\PY{n}{slope}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+    \PY{n}{step} \PY{o}{=} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{x}\PY{o}{\PYZhy{}}\PY{n}{prev}\PY{p}{)}
+    \PY{n}{arr}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{x}\PY{p}{)}
+    \PY{n+nb}{iter}\PY{o}{+}\PY{o}{=}\PY{l+m+mi}{1}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Iteration }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{iter}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ : }\PY{l+s+si}{\PYZob{}}\PY{n}{x}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iteration 2 : 1.9
+Iteration 3 : 1.8019999999999998
+Iteration 4 : 1.70596
+Iteration 5 : 1.6118408
+Iteration 6 : 1.519603984
+Iteration 7 : 1.42921190432
+Iteration 8 : 1.3406276662336
+Iteration 9 : 1.253815112908928
+Iteration 10 : 1.1687388106507495
+Iteration 11 : 1.0853640344377344
+Iteration 12 : 1.0036567537489798
+Iteration 13 : 0.9235836186740002
+Iteration 14 : 0.8451119463005202
+Iteration 15 : 0.7682097073745098
+Iteration 16 : 0.6928455132270196
+Iteration 17 : 0.6189886029624792
+Iteration 18 : 0.5466088309032295
+Iteration 19 : 0.4756766542851649
+Iteration 20 : 0.40616312119946163
+Iteration 21 : 0.3380398587754724
+Iteration 22 : 0.27127906159996296
+Iteration 23 : 0.2058534803679637
+Iteration 24 : 0.14173641076060442
+Iteration 25 : 0.07890168254539233
+Iteration 26 : 0.017323648894484484
+Iteration 27 : -0.04302282408340521
+Iteration 28 : -0.10216236760173711
+Iteration 29 : -0.16011912024970237
+Iteration 30 : -0.21691673784470833
+Iteration 31 : -0.27257840308781417
+Iteration 32 : -0.3271268350260579
+Iteration 33 : -0.38058429832553675
+Iteration 34 : -0.432972612359026
+Iteration 35 : -0.4843131601118455
+Iteration 36 : -0.5346268969096086
+Iteration 37 : -0.5839343589714164
+Iteration 38 : -0.632255671791988
+Iteration 39 : -0.6796105583561483
+Iteration 40 : -0.7260183471890252
+Iteration 41 : -0.7714979802452447
+Iteration 42 : -0.8160680206403399
+Iteration 43 : -0.8597466602275331
+Iteration 44 : -0.9025517270229825
+Iteration 45 : -0.9445006924825228
+Iteration 46 : -0.9856106786328723
+Iteration 47 : -1.025898465060215
+Iteration 48 : -1.0653804957590107
+Iteration 49 : -1.1040728858438305
+Iteration 50 : -1.1419914281269539
+Iteration 51 : -1.1791515995644148
+Iteration 52 : -1.2155685675731265
+Iteration 53 : -1.2512571962216639
+Iteration 54 : -1.2862320522972306
+Iteration 55 : -1.320507411251286
+Iteration 56 : -1.3540972630262602
+Iteration 57 : -1.387015317765735
+Iteration 58 : -1.4192750114104202
+Iteration 59 : -1.4508895111822118
+Iteration 60 : -1.4818717209585675
+Iteration 61 : -1.512234286539396
+Iteration 62 : -1.5419896008086083
+Iteration 63 : -1.571149808792436
+Iteration 64 : -1.5997268126165873
+Iteration 65 : -1.6277322763642557
+Iteration 66 : -1.6551776308369706
+Iteration 67 : -1.6820740782202313
+Iteration 68 : -1.7084325966558267
+Iteration 69 : -1.7342639447227102
+Iteration 70 : -1.759578665828256
+Iteration 71 : -1.784387092511691
+Iteration 72 : -1.808699350661457
+Iteration 73 : -1.832525363648228
+Iteration 74 : -1.8558748563752634
+Iteration 75 : -1.8787573592477582
+Iteration 76 : -1.901182212062803
+Iteration 77 : -1.923158567821547
+Iteration 78 : -1.9446953964651161
+Iteration 79 : -1.9658014885358137
+Iteration 80 : -1.9864854587650975
+Iteration 81 : -2.0067557495897956
+Iteration 82 : -2.026620634598
+Iteration 83 : -2.04608822190604
+Iteration 84 : -2.065166457467919
+Iteration 85 : -2.0838631283185607
+Iteration 86 : -2.1021858657521895
+Iteration 87 : -2.1201421484371457
+Iteration 88 : -2.137739305468403
+Iteration 89 : -2.1549845193590347
+Iteration 90 : -2.171884828971854
+Iteration 91 : -2.188447132392417
+Iteration 92 : -2.204678189744569
+Iteration 93 : -2.2205846259496775
+Iteration 94 : -2.236172933430684
+Iteration 95 : -2.2514494747620706
+Iteration 96 : -2.266420485266829
+Iteration 97 : -2.2810920755614923
+Iteration 98 : -2.2954702340502626
+Iteration 99 : -2.3095608293692576
+Iteration 100 : -2.3233696127818724
+Iteration 101 : -2.336902220526235
+Iteration 102 : -2.3501641761157104
+Iteration 103 : -2.3631608925933962
+Iteration 104 : -2.375897674741528
+Iteration 105 : -2.3883797212466975
+Iteration 106 : -2.4006121268217635
+Iteration 107 : -2.4125998842853282
+Iteration 108 : -2.4243478865996217
+Iteration 109 : -2.4358609288676294
+Iteration 110 : -2.447143710290277
+Iteration 111 : -2.458200836084471
+Iteration 112 : -2.4690368193627816
+Iteration 113 : -2.479656082975526
+Iteration 114 : -2.4900629613160152
+Iteration 115 : -2.500261702089695
+Iteration 116 : -2.510256468047901
+Iteration 117 : -2.520051338686943
+Iteration 118 : -2.5296503119132043
+Iteration 119 : -2.53905730567494
+Iteration 120 : -2.5482761595614414
+Iteration 121 : -2.5573106363702127
+Iteration 122 : -2.5661644236428085
+Iteration 123 : -2.5748411351699523
+Iteration 124 : -2.5833443124665534
+Iteration 125 : -2.591677426217222
+Iteration 126 : -2.599843877692878
+Iteration 127 : -2.6078470001390204
+Iteration 128 : -2.61569006013624
+Iteration 129 : -2.623376258933515
+Iteration 130 : -2.6309087337548447
+Iteration 131 : -2.638290559079748
+Iteration 132 : -2.6455247478981527
+Iteration 133 : -2.6526142529401895
+Iteration 134 : -2.6595619678813858
+Iteration 135 : -2.666370728523758
+Iteration 136 : -2.6730433139532828
+Iteration 137 : -2.679582447674217
+Iteration 138 : -2.685990798720733
+Iteration 139 : -2.6922709827463183
+Iteration 140 : -2.698425563091392
+Iteration 141 : -2.7044570518295643
+Iteration 142 : -2.7103679107929732
+Iteration 143 : -2.7161605525771138
+Iteration 144 : -2.7218373415255717
+Iteration 145 : -2.72740059469506
+Iteration 146 : -2.7328525828011587
+Iteration 147 : -2.7381955311451356
+Iteration 148 : -2.743431620522233
+Iteration 149 : -2.748562988111788
+Iteration 150 : -2.7535917283495523
+Iteration 151 : -2.7585198937825615
+Iteration 152 : -2.76334949590691
+Iteration 153 : -2.768082505988772
+Iteration 154 : -2.7727208558689966
+Iteration 155 : -2.777266438751617
+Iteration 156 : -2.7817211099765844
+Iteration 157 : -2.7860866877770527
+Iteration 158 : -2.790364954021512
+Iteration 159 : -2.7945576549410815
+Iteration 160 : -2.79866650184226
+Iteration 161 : -2.802693171805415
+Iteration 162 : -2.8066393083693066
+Iteration 163 : -2.8105065222019205
+Iteration 164 : -2.8142963917578823
+Iteration 165 : -2.818010463922725
+Iteration 166 : -2.82165025464427
+Iteration 167 : -2.8252172495513848
+Iteration 168 : -2.828712904560357
+Iteration 169 : -2.83213864646915
+Iteration 170 : -2.8354958735397666
+Iteration 171 : -2.838785956068971
+Iteration 172 : -2.842010236947592
+Iteration 173 : -2.84517003220864
+Iteration 174 : -2.8482666315644676
+Iteration 175 : -2.851301298933178
+Iteration 176 : -2.8542752729545144
+Iteration 177 : -2.857189767495424
+Iteration 178 : -2.8600459721455156
+Iteration 179 : -2.8628450527026055
+Iteration 180 : -2.8655881516485535
+Iteration 181 : -2.8682763886155827
+Iteration 182 : -2.870910860843271
+Iteration 183 : -2.8734926436264057
+Iteration 184 : -2.8760227907538773
+Iteration 185 : -2.8785023349388
+Iteration 186 : -2.880932288240024
+Iteration 187 : -2.8833136424752235
+Iteration 188 : -2.885647369625719
+Iteration 189 : -2.8879344222332044
+Iteration 190 : -2.8901757337885403
+Iteration 191 : -2.8923722191127696
+Iteration 192 : -2.894524774730514
+Iteration 193 : -2.896634279235904
+Iteration 194 : -2.898701593651186
+Iteration 195 : -2.900727561778162
+Iteration 196 : -2.9027130105425987
+Iteration 197 : -2.9046587503317465
+Iteration 198 : -2.9065655753251116
+Iteration 199 : -2.9084342638186094
+Iteration 200 : -2.910265578542237
+Iteration 201 : -2.9120602669713924
+Iteration 202 : -2.9138190616319646
+Iteration 203 : -2.915542680399325
+Iteration 204 : -2.9172318267913386
+Iteration 205 : -2.918887190255512
+Iteration 206 : -2.920509446450402
+Iteration 207 : -2.9220992575213938
+Iteration 208 : -2.9236572723709657
+Iteration 209 : -2.9251841269235466
+Iteration 210 : -2.9266804443850756
+Iteration 211 : -2.928146835497374
+Iteration 212 : -2.9295838987874263
+Iteration 213 : -2.9309922208116777
+Iteration 214 : -2.932372376395444
+Iteration 215 : -2.933724928867535
+Iteration 216 : -2.9350504302901843
+Iteration 217 : -2.9363494216843806
+Iteration 218 : -2.937622433250693
+Iteration 219 : -2.938869984585679
+Iteration 220 : -2.9400925848939656
+Iteration 221 : -2.9412907331960865
+Iteration 222 : -2.9424649185321647
+Iteration 223 : -2.9436156201615216
+Iteration 224 : -2.944743307758291
+Iteration 225 : -2.9458484416031254
+Iteration 226 : -2.946931472771063
+Iteration 227 : -2.9479928433156415
+Iteration 228 : -2.9490329864493288
+Iteration 229 : -2.9500523267203422
+Iteration 230 : -2.9510512801859354
+Iteration 231 : -2.952030254582217
+Iteration 232 : -2.9529896494905725
+Iteration 233 : -2.953929856500761
+Iteration 234 : -2.954851259370746
+Iteration 235 : -2.955754234183331
+Iteration 236 : -2.9566391494996647
+Iteration 237 : -2.9575063665096715
+Iteration 238 : -2.958356239179478
+Iteration 239 : -2.9591891143958886
+Iteration 240 : -2.9600053321079707
+Iteration 241 : -2.960805225465811
+Iteration 242 : -2.9615891209564946
+Iteration 243 : -2.9623573385373647
+Iteration 244 : -2.9631101917666176
+Iteration 245 : -2.963847987931285
+Iteration 246 : -2.9645710281726596
+Iteration 247 : -2.9652796076092063
+Iteration 248 : -2.965974015457022
+Iteration 249 : -2.9666545351478817
+Iteration 250 : -2.967321444444924
+Iteration 251 : -2.9679750155560254
+Iteration 252 : -2.9686155152449047
+Iteration 253 : -2.969243204940007
+Iteration 254 : -2.9698583408412067
+Iteration 255 : -2.9704611740243827
+Iteration 256 : -2.9710519505438953
+Iteration 257 : -2.9716309115330173
+Iteration 258 : -2.9721982933023567
+Iteration 259 : -2.9727543274363097
+Iteration 260 : -2.9732992408875836
+Iteration 261 : -2.973833256069832
+Iteration 262 : -2.9743565909484353
+Iteration 263 : -2.9748694591294664
+Iteration 264 : -2.9753720699468773
+Iteration 265 : -2.9758646285479395
+Iteration 266 : -2.9763473359769805
+Iteration 267 : -2.976820389257441
+Iteration 268 : -2.9772839814722922
+Iteration 269 : -2.9777383018428463
+Iteration 270 : -2.9781835358059894
+Iteration 271 : -2.9786198650898696
+Iteration 272 : -2.9790474677880723
+Iteration 273 : -2.979466518432311
+Iteration 274 : -2.9798771880636648
+Iteration 275 : -2.9802796443023913
+Iteration 276 : -2.9806740514163437
+Iteration 277 : -2.9810605703880166
+Iteration 278 : -2.981439358980256
+Iteration 279 : -2.981810571800651
+Iteration 280 : -2.9821743603646382
+Iteration 281 : -2.9825308731573457
+Iteration 282 : -2.982880255694199
+Iteration 283 : -2.983222650580315
+Iteration 284 : -2.983558197568709
+Iteration 285 : -2.983887033617335
+Iteration 286 : -2.984209292944988
+Iteration 287 : -2.9845251070860885
+Iteration 288 : -2.984834604944367
+Iteration 289 : -2.9851379128454796
+Iteration 290 : -2.98543515458857
+Iteration 291 : -2.9857264514967983
+Iteration 292 : -2.9860119224668624
+Iteration 293 : -2.9862916840175253
+Iteration 294 : -2.9865658503371746
+Iteration 295 : -2.986834533330431
+Iteration 296 : -2.987097842663822
+Iteration 297 : -2.987355885810546
+Iteration 298 : -2.987608768094335
+Iteration 299 : -2.9878565927324483
+Iteration 300 : -2.9880994608777995
+Iteration 301 : -2.9883374716602438
+Iteration 302 : -2.988570722227039
+Iteration 303 : -2.988799307782498
+Iteration 304 : -2.989023321626848
+Iteration 305 : -2.989242855194311
+Iteration 306 : -2.989457998090425
+Iteration 307 : -2.9896688381286163
+Iteration 308 : -2.989875461366044
+Iteration 309 : -2.9900779521387233
+Iteration 310 : -2.990276393095949
+Iteration 311 : -2.99047086523403
+Iteration 312 : -2.9906614479293494
+Iteration 313 : -2.9908482189707626
+Iteration 314 : -2.9910312545913476
+Iteration 315 : -2.9912106294995207
+Iteration 316 : -2.9913864169095303
+Iteration 317 : -2.99155868857134
+Iteration 318 : -2.991727514799913
+Iteration 319 : -2.9918929645039145
+Iteration 320 : -2.9920551052138364
+Iteration 321 : -2.99221400310956
+Iteration 322 : -2.9923697230473687
+Iteration 323 : -2.9925223285864213
+Iteration 324 : -2.992671882014693
+Iteration 325 : -2.9928184443743993
+Iteration 326 : -2.9929620754869113
+Iteration 327 : -2.993102833977173
+Iteration 328 : -2.9932407772976295
+Iteration 329 : -2.993375961751677
+Iteration 330 : -2.993508442516643
+Iteration 331 : -2.9936382736663103
+Iteration 332 : -2.993765508192984
+Iteration 333 : -2.993890198029124
+Iteration 334 : -2.9940123940685415
+Iteration 335 : -2.994132146187171
+Iteration 336 : -2.9942495032634273
+Iteration 337 : -2.9943645131981587
+Iteration 338 : -2.9944772229341954
+Iteration 339 : -2.9945876784755114
+Iteration 340 : -2.9946959249060012
+Iteration 341 : -2.9948020064078813
+Iteration 342 : -2.9949059662797235
+Iteration 343 : -2.9950078469541292
+Iteration 344 : -2.995107690015047
+Iteration 345 : -2.995205536214746
+Iteration 346 : -2.995301425490451
+Iteration 347 : -2.995395396980642
+Iteration 348 : -2.9954874890410292
+Iteration 349 : -2.9955777392602085
+Iteration 350 : -2.9956661844750045
+Iteration 351 : -2.9957528607855046
+Iteration 352 : -2.9958378035697946
+Iteration 353 : -2.9959210474983986
+Iteration 354 : -2.9960026265484307
+Iteration 355 : -2.996082574017462
+Iteration 356 : -2.9961609225371126
+Iteration 357 : -2.9962377040863704
+Iteration 358 : -2.996312950004643
+Iteration 359 : -2.9963866910045502
+Iteration 360 : -2.9964589571844593
+Iteration 361 : -2.9965297780407703
+Iteration 362 : -2.996599182479955
+Iteration 363 : -2.9966671988303557
+Iteration 364 : -2.9967338548537485
+Iteration 365 : -2.9967991777566736
+Iteration 366 : -2.99686319420154
+Iteration 367 : -2.9969259303175093
+Iteration 368 : -2.9969874117111592
+Iteration 369 : -2.997047663476936
+Iteration 370 : -2.997106710207397
+Iteration 371 : -2.997164576003249
+Iteration 372 : -2.997221284483184
+Iteration 373 : -2.99727685879352
+Iteration 374 : -2.99733132161765
+Iteration 375 : -2.9973846951852967
+Iteration 376 : -2.997437001281591
+Iteration 377 : -2.9974882612559592
+Iteration 378 : -2.99753849603084
+Iteration 379 : -2.9975877261102233
+Iteration 380 : -2.9976359715880188
+Iteration 381 : -2.9976832521562584
+Iteration 382 : -2.9977295871131333
+Iteration 383 : -2.9977749953708708
+Iteration 384 : -2.997819495463453
+Iteration 385 : -2.9978631055541842
+Iteration 386 : -2.9979058434431005
+Iteration 387 : -2.9979477265742385
+Iteration 388 : -2.9979887720427536
+Iteration 389 : -2.9980289966018985
+Iteration 390 : -2.9980684166698603
+Iteration 391 : -2.9981070483364634
+Iteration 392 : -2.998144907369734
+Iteration 393 : -2.9981820092223392
+Iteration 394 : -2.9982183690378923
+Iteration 395 : -2.9982540016571346
+Iteration 396 : -2.998288921623992
+Iteration 397 : -2.998323143191512
+Iteration 398 : -2.998356680327682
+Iteration 399 : -2.9983895467211283
+Iteration 400 : -2.9984217557867057
+Iteration 401 : -2.9984533206709716
+Iteration 402 : -2.9984842542575523
+Iteration 403 : -2.9985145691724013
+Iteration 404 : -2.9985442777889535
+Iteration 405 : -2.9985733922331743
+Iteration 406 : -2.998601924388511
+Iteration 407 : -2.9986298859007405
+Iteration 408 : -2.998657288182726
+Iteration 409 : -2.998684142419071
+Iteration 410 : -2.9987104595706895
+Iteration 411 : -2.9987362503792756
+Iteration 412 : -2.99876152537169
+Iteration 413 : -2.9987862948642565
+Iteration 414 : -2.9988105689669715
+Iteration 415 : -2.998834357587632
+Iteration 416 : -2.9988576704358794
+Iteration 417 : -2.9988805170271617
+Iteration 418 : -2.9989029066866184
+Iteration 419 : -2.998924848552886
+Iteration 420 : -2.998946351581828
+Iteration 421 : -2.998967424550192
+Iteration 422 : -2.998988076059188
+Iteration 423 : -2.9990083145380044
+Iteration 424 : -2.9990281482472443
+Iteration 425 : -2.9990475852822995
+Iteration 426 : -2.9990666335766534
+Iteration 427 : -2.9990853009051204
+Iteration 428 : -2.999103594887018
+Iteration 429 : -2.999121522989278
+Iteration 430 : -2.999139092529492
+Iteration 431 : -2.9991563106789023
+Iteration 432 : -2.999173184465324
+Iteration 433 : -2.999189720776018
+Iteration 434 : -2.9992059263604975
+Iteration 435 : -2.9992218078332877
+Iteration 436 : -2.999237371676622
+Iteration 437 : -2.9992526242430895
+Iteration 438 : -2.9992675717582276
+Iteration 439 : -2.999282220323063
+Iteration 440 : -2.9992965759166017
+Iteration 441 : -2.9993106443982698
+Iteration 442 : -2.9993244315103045
+Iteration 443 : -2.9993379428800986
+Iteration 444 : -2.9993511840224967
+Iteration 445 : -2.9993641603420467
+Iteration 446 : -2.9993768771352056
+Iteration 447 : -2.9993893395925015
+Iteration 448 : -2.9994015528006517
+Iteration 449 : -2.9994135217446387
+Iteration 450 : -2.999425251309746
+Iteration 451 : -2.999436746283551
+Iteration 452 : -2.99944801135788
+Iteration 453 : -2.9994590511307226
+Iteration 454 : -2.999469870108108
+Iteration 455 : -2.999480472705946
+Iteration 456 : -2.999490863251827
+Iteration 457 : -2.999501045986791
+Iteration 458 : -2.999511025067055
+Iteration 459 : -2.999520804565714
+Iteration 460 : -2.9995303884744
+Iteration 461 : -2.999539780704912
+Iteration 462 : -2.9995489850908137
+Iteration 463 : -2.999558005388997
+Iteration 464 : -2.999566845281217
+Iteration 465 : -2.999575508375593
+Iteration 466 : -2.999583998208081
+Iteration 467 : -2.9995923182439195
+Iteration 468 : -2.999600471879041
+Iteration 469 : -2.9996084624414605
+Iteration 470 : -2.999616293192631
+Iteration 471 : -2.9996239673287786
+Iteration 472 : -2.999631487982203
+Iteration 473 : -2.999638858222559
+Iteration 474 : -2.9996460810581076
+Iteration 475 : -2.9996531594369453
+Iteration 476 : -2.9996600962482063
+Iteration 477 : -2.999666894323242
+Iteration 478 : -2.999673556436777
+Iteration 479 : -2.9996800853080416
+Iteration 480 : -2.999686483601881
+Iteration 481 : -2.999692753929843
+Iteration 482 : -2.9996988988512463
+Iteration 483 : -2.9997049208742212
+Iteration 484 : -2.999710822456737
+Iteration 485 : -2.999716606007602
+Iteration 486 : -2.9997222738874503
+Iteration 487 : -2.9997278284097013
+Iteration 488 : -2.9997332718415075
+Iteration 489 : -2.9997386064046774
+Iteration 490 : -2.999743834276584
+Iteration 491 : -2.999748957591052
+Iteration 492 : -2.999753978439231
+Iteration 493 : -2.9997588988704464
+Iteration 494 : -2.9997637208930374
+Iteration 495 : -2.999768446475177
+Iteration 496 : -2.9997730775456732
+Iteration 497 : -2.9997776159947596
+Iteration 498 : -2.999782063674864
+Iteration 499 : -2.999786422401367
+Iteration 500 : -2.9997906939533396
+Iteration 501 : -2.9997948800742726
+Iteration 502 : -2.9997989824727873
+Iteration 503 : -2.999803002823332
+Iteration 504 : -2.999806942766865
+Iteration 505 : -2.9998108039115277
+Iteration 506 : -2.999814587833297
+Iteration 507 : -2.999818296076631
+Iteration 508 : -2.9998219301550986
+Iteration 509 : -2.9998254915519964
+Iteration 510 : -2.9998289817209565
+Iteration 511 : -2.9998324020865375
+Iteration 512 : -2.9998357540448066
+Iteration 513 : -2.9998390389639105
+Iteration 514 : -2.9998422581846325
+Iteration 515 : -2.9998454130209398
+Iteration 516 : -2.999848504760521
+Iteration 517 : -2.9998515346653107
+Iteration 518 : -2.9998545039720046
+Iteration 519 : -2.9998574138925647
+Iteration 520 : -2.9998602656147133
+Iteration 521 : -2.999863060302419
+Iteration 522 : -2.9998657990963706
+Iteration 523 : -2.9998684831144433
+Iteration 524 : -2.9998711134521545
+Iteration 525 : -2.9998736911831116
+Iteration 526 : -2.9998762173594495
+Iteration 527 : -2.9998786930122607
+Iteration 528 : -2.9998811191520156
+Iteration 529 : -2.9998834967689754
+Iteration 530 : -2.9998858268335957
+Iteration 531 : -2.999888110296924
+Iteration 532 : -2.9998903480909855
+Iteration 533 : -2.999892541129166
+Iteration 534 : -2.9998946903065824
+Iteration 535 : -2.9998967965004506
+Iteration 536 : -2.9998988605704415
+Iteration 537 : -2.999900883359033
+Iteration 538 : -2.999902865691852
+Iteration 539 : -2.999904808378015
+Iteration 540 : -2.999906712210455
+Iteration 541 : -2.9999085779662455
+Iteration 542 : -2.9999104064069204
+Iteration 543 : -2.999912198278782
+Iteration 544 : -2.9999139543132065
+Iteration 545 : -2.9999156752269425
+Iteration 546 : -2.9999173617224035
+Iteration 547 : -2.9999190144879555
+Iteration 548 : -2.9999206341981965
+Iteration 549 : -2.9999222215142325
+Iteration 550 : -2.9999237770839478
+Iteration 551 : -2.9999253015422687
+Iteration 552 : -2.9999267955114233
+Iteration 553 : -2.999928259601195
+Iteration 554 : -2.999929694409171
+Iteration 555 : -2.9999311005209877
+Iteration 556 : -2.999932478510568
+Iteration 557 : -2.9999338289403563
+Iteration 558 : -2.9999351523615494
+Iteration 559 : -2.9999364493143186
+Iteration 560 : -2.9999377203280324
+Iteration 561 : -2.999938965921472
+Iteration 562 : -2.9999401866030424
+Iteration 563 : -2.9999413828709818
+Iteration 564 : -2.999942555213562
+Iteration 565 : -2.999943704109291
+Iteration 566 : -2.999944830027105
+Iteration 567 : -2.999945933426563
+Iteration 568 : -2.999947014758032
+Iteration 569 : -2.9999480744628713
+Iteration 570 : -2.999949112973614
+Iteration 571 : -2.999950130714142
+Iteration 572 : -2.999951128099859
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Local Minima : }\PY{l+s+si}{\PYZob{}}\PY{n}{x}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Local Minima : -2.999951128099859
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{46}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{line} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{100}\PY{p}{)}
+\PY{n}{arr} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{arr}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{line}\PY{p}{,}\PY{n}{eq}\PY{p}{(}\PY{n}{line}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{arr}\PY{p}{,}\PY{n}{eq}\PY{p}{(}\PY{n}{arr}\PY{p}{)} \PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{46}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[<matplotlib.lines.Line2D at 0x27954316010>]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_5_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

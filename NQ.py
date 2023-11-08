@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[173]:
+
+
+def is_safe(board,row,col):
+    for i in range(col):
+        if board[row][i] == 'Q':
+            return False
+    i,j=row,col
+    while i>=0 and j>=0:
+        if board[i][j] == 'Q':
+            return False
+        i-=1
+        j-=1
+        
+    i,j=row,col
+    while i<0 and j>=0:
+        if board[i][j] == 'Q':
+            return False
+        i+=1
+        j-=1
+    return True
+        
+
+
+# In[174]:
+
+
+def NQueen(board,col):
+    if col>=N:
+        return True
+    for i in range(N):
+        if is_safe(board,i,col):
+            board[i][col] = 'Q'
+            
+            if NQueen(board,col+1):
+                return True
+            board[i][col] = '.'
+    return False
+
+
+# In[175]:
+
+
+N = int(input("ENTER number of QUEENS : "))
+I = int(input("ENTER row number : "))
+board = [['.']*N for _ in range(N)]
+board[I-1][0]='Q'
+if NQueen(board,1):
+    for row in board:
+        print(' '.join(row))
+else:
+    print("NO SOLUTION POSSIBLE")
+
